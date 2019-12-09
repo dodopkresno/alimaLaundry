@@ -1,0 +1,92 @@
+<odoo>
+  <data>
+    <!-- View -->
+    <!-- Tree Config Work Type -->
+    <record id="work_type_tree" model="ir.ui.view">
+    <field name="name">work.type.tree</field>
+    <field name="model">work.type</field>
+    <field name="arch" type="xml">
+            <tree string="Work Type">
+                <field name="code"/>
+                <field name="name"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Form Config Work Type -->
+    <record id="work_type_form" model="ir.ui.view">
+        <field name="name">work.type.form</field>
+        <field name="model">work.type</field>
+        <field name="arch" type="xml">
+            <form string="Work Type">
+                <sheet>
+                    <group> 
+                        <field name="code" />
+                        <field name="name" />
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Inherit Form View Res Partner -->
+    <record id="ih_res_partner" model="ir.ui.view">
+        <field name="name">ih.res.partner</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='industry_id']" position="after">
+                <label for="revenue_shared" />
+                <div class="o_row">
+                    <field name="revenue_shared" /><span>%</span>
+                </div>
+            </xpath>
+        </field>
+    </record>
+    <!-- Inherit Form View Product -->
+    <record id="ih_product" model="ir.ui.view">
+        <field name="name">ih.product</field>
+        <field name="model">product.product</field>
+        <field name="inherit_id" ref="product.product_normal_form_view" />
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='barcode']" position="after">
+                <field name="work_type" />
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Action -->
+    <record id="action_work_type" model="ir.actions.act_window">
+        <field name="name">Work Type</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">work.type</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+        <field name="view_id" ref="work_type_tree"/>
+        <field name="help" type="html">
+            <p class="oe_view_nocontent_create">
+                Click to add laundry work type
+            </p>
+            <p> Add Work Type </p>
+        </field>
+    </record>
+        <record id="action_work_type_tree" model="ir.actions.act_window.view">
+        <field name="sequence" eval="1"/>
+        <field name="view_mode">tree</field>
+        <field name="view_id" ref="work_type_tree"/>
+        <field name="act_window_id" ref="action_work_type"/>
+    </record>
+    <record id="action_work_type_form" model="ir.actions.act_window.view">
+        <field name="sequence" eval="2"/>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="work_type_form"/>
+        <field name="act_window_id" ref="action_work_type"/>
+    </record>
+
+    <!-- menu -->
+    <menuitem id="laundry_config_menu" name="Configuration" parent="laundry_management_menu"/>
+    <menuitem id="laundry_partner" name="Partner" parent="laundry_config_menu" action="base.action_partner_customer_form" sequence="1"/>
+    <menuitem id="laundry_products" name="Products" parent="laundry_config_menu" action="product.product_normal_action_sell" sequence="2"/>
+    <menuitem id="laundry_work_type" name="Work Type" parent="laundry_config_menu" action="action_work_type" sequence="3"/>
+  </data>
+</odoo>

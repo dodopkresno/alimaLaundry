@@ -1,0 +1,60 @@
+<odoo>
+  <data>
+    <!-- explicit list view definition -->
+    <!--
+    <record model="ir.ui.view" id="alima_laundry.list">
+      <field name="name">alima_laundry list</field>
+      <field name="model">alima_laundry.alima_laundry</field>
+      <field name="arch" type="xml">
+        <tree>
+          <field name="name"/>
+          <field name="value"/>
+          <field name="value2"/>
+        </tree>
+      </field>
+    </record>
+    -->
+
+    <!-- actions opening views on models -->
+    <!--
+    <record model="ir.actions.act_window" id="alima_laundry.action_window">
+      <field name="name">alima_laundry window</field>
+      <field name="res_model">alima_laundry.alima_laundry</field>
+      <field name="view_mode">tree,form</field>
+    </record>
+    -->
+
+    <!-- server action to the one above -->
+    <!--
+    <record model="ir.actions.server" id="alima_laundry.action_server">
+      <field name="name">alima_laundry server</field>
+      <field name="model_id" ref="model_alima_laundry_alima_laundry"/>
+      <field name="state">code</field>
+      <field name="code">
+        action = {
+          "type": "ir.actions.act_window",
+          "view_mode": "tree,form",
+          "res_model": self._name,
+        }
+      </field>
+    </record>
+    -->
+
+    <!-- Top menu item -->
+    <!--
+    <menuitem name="alima_laundry" id="alima_laundry.menu_root"/>
+    -->
+    <!-- menu categories -->
+    <!--
+    <menuitem name="Menu 1" id="alima_laundry.menu_1" parent="alima_laundry.menu_root"/>
+    <menuitem name="Menu 2" id="alima_laundry.menu_2" parent="alima_laundry.menu_root"/>
+    -->
+    <!-- actions -->
+    <!--
+    <menuitem name="List" id="alima_laundry.menu_1_list" parent="alima_laundry.menu_1"
+              action="alima_laundry.action_window"/>
+    <menuitem name="Server to list" id="alima_laundry" parent="alima_laundry.menu_2"
+              action="alima_laundry.action_server"/>
+    -->
+  </data>
+</odoo>

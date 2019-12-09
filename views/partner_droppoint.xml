@@ -1,0 +1,17 @@
+<odoo>
+  <data>
+    <record id="ih_res_partner" model="ir.ui.view">
+        <field name="name">alima_laundry.res_partner</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='industry_id']" position="after">
+                <label for="revenue_shared" />
+                <div class="o_row">
+                    <field name="revenue_shared" /><span>%</span>
+                </div>
+            </xpath>
+        </field>
+    </record>
+  </data>
+</odoo>
