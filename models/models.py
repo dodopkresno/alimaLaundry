@@ -168,6 +168,7 @@ class LaundryWorkManagement(models.Model):
     name = fields.Char(string='Label', copy=False)
     sale_obj = fields.Many2one('sale.order', string="Order Ref.")
     work_count = fields.Integer(compute='_work_count', string='# Works')
+    #partner as customer
     partner_id = fields.Char(string='Customer', related = 'sale_obj.partner_id', readonly=True)
     order_date = fields.Datetime(string="Order Date", related ='sale_obj.lo_date', readonly=True)
     estimated_od_date = fields.Datetime(string="Estimated Finish", related='sale_obj.lo_commitment_date', readonly=True)
