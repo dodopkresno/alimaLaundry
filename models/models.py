@@ -34,7 +34,7 @@ class LaundryOrder(model.Model):
             lo_wo_obj = self.env['laundry.work.order'].create({'sale_obj': self.id})
             #insert into Laundry WO Line
             for each in self:
-		#Check WO/ order Line
+		    #Check WO/ order Line (check git)
                 if not each.order_line:
                     raise ValidationError(_('''Order haven't lines. Please create order line(s)''')) 
 
