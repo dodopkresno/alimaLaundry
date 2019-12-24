@@ -42,7 +42,7 @@ class LaundryOrder(model.Model):
                 wo_lines = []
                 for obj in each.order_line:
                     qty_item = obj.product_uom_qty
-                    if obj.work_type = 'wash':
+                    if obj.work_type == 'wash':
                         #loop so line insert to woline based on qty
                         qty_insertw = 1
                         while qty_insertw <= qty_item:
@@ -51,7 +51,7 @@ class LaundryOrder(model.Model):
                                                                                 'laundry_obj':lo_wo_obj.id})
                             wo_lines.append(lo_woline_obj.id)
                             qty_insertw += 1
-                    elif obj.work_type = 'extra_work':
+                    elif obj.work_type == 'extra_work':
                         qty_inserte = 1
                         while qty_inserte <= qty_item:
                             self.env['laundry.work.line'].create({'product_id': obj.product_id.id,
@@ -83,7 +83,7 @@ class LaundryOrderLine(model.Models):
 class ProductProduct(models.Model):
     _inherit = 'product.product'
  
-     work_type = fields.Many2one('work.type', string='Work Type')
+    work_type = fields.Many2one('work.type', string='Work Type')
 #inherit
 class IhResPartner(models.Model):
 	_inherit = 'res.partner'
@@ -171,7 +171,7 @@ class LaundryWorkManagement(models.Model):
     partner_id = fields.Char(string='Customer', related = 'sale_obj.partner_id', readonly=True)
     order_date = fields.Datetime(string="Order Date", related ='sale_obj.lo_date', readonly=True)
     estimated_od_date = fields.Datetime(string="Estimated Finish", related='sale_obj.lo_commitment_date', readonly=True)
-    actual_finish = (string="Actual Date", default=fields.Date.today)
+    actual_finish = fields.Datetime(string="Actual Date", default=fields.Date.today)
     order_lines = fields.One2many('laundry.work.line', 'laundry_obj', ondelete='cascade')
     remarks = fields.Text(string='Sales Remarks', related = 'sale_obj.remarks', readonly=True)
     #outstanding_extra = fields.Integer(String='Outstanding EW Item(s)')
@@ -208,10 +208,10 @@ class WorkType(models.Model):
     #Wash, Extra Work
 
     code = fields.Char(string='Reference', required=True)
-	name = fields.Char(string='Name', required=True)
+    name = fields.Char(string='Name', required=True)
 
     @api.constrains('code')
-	def check_code(self):
+    def check_code(self):
 		trcode = self.search([('code', '=', self.code),
 							('id', 'not in', self.ids)])
 		if trcode:
