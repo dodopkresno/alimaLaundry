@@ -187,6 +187,8 @@ class LaundryWorkManagement(models.Model):
 class LaundryWorkLine(models.Model):
     _name = 'laundry.work.line'
 
+    #should be have sequence or name
+    name = fields.Char(string='Line Label', copy=False)
     product_id = fields.Many2one('product.product', string='Item(s)', required=True, readonly=True)
     uom_id = fields.Many2one('product.uom', 'Unit of Measure ', required=True)
     description = fields.Text(string='Description')
