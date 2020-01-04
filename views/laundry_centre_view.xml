@@ -57,10 +57,24 @@
                 </group>
                 <notebook>
                     <page string="Work Order Lines">
-                        <field name="order_lines" mode="tree" attrs="{'readonly': [('state', 'not in', ('draft'))]}">
+                        <field name="order_lines" mode="tree" domain="[('laundry_works','=', False)]" attrs="{'readonly': [('state', 'not in', ('draft'))]}">
                             <tree string="Laundry Order Lines" delete="False">
-                                <field name="product_id"/>
-                                <field name="uom_id" />
+                                <field name="name" />
+                                <field name="product_id" />
+                                <field name="child_ids" domain="[('laundry_works','=', True)]" widget="many2many_tags" />
+                                <field name="assigned_person" />
+                                <field name="description" />
+                                <field name="state" />
+                                <field name="laundry_works" invisible="1"/>
+                            </tree>
+                        </field>
+                    </page>
+                    <page string="Extra Work Lines">
+                        <field name="order_lines" mode="tree" domain="[('laundry_works','=', True)]" attrs="{'readonly': [('state', 'not in', ('draft'))]}">
+                            <tree string="Laundry Order Lines" delete="False">
+                                <field name="name" />
+                                <field name="product_id" />
+                                <field name="parent" readonly="True" />
                                 <field name="assigned_person" />
                                 <field name="description" />
                                 <field name="state" />
