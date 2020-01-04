@@ -166,7 +166,7 @@ class LaundryWorkManagement(models.Model):
             return value
 
     name = fields.Char(string='Label', copy=False)
-    sale_obj = fields.Many2one('sale.order', string="Order Ref.")
+    sale_obj = fields.Many2one('sale.order', string="Order Ref.", readonly=True)
     work_count = fields.Integer(compute='_work_count', string='# Works')
     #partner as customer
     partner_id = fields.Char(string='Customer', related = 'sale_obj.partner_id', readonly=True)

@@ -20,27 +20,21 @@
     <!-- Form View Laundry -->
     <record id="view_laundry_centre_form" model="ir.ui.view">
         <field name="name">laundry.centre.form</field>
-        <field name="model">laundry.work.orderr</field>
+        <field name="model">laundry.work.order</field>
         <field name="arch" type="xml">
             <form string="Laundry Order" class="o_sale_order">
             <header>
                 <button name="lo_execute" string="Execute" states="draft" class="btn-primary" type="object" />
-                <button name="print_laundry_order" string="Print Order" type="object" class="btn-primary" states="draft,sale"/>
-                <button name="print_laundry_label" string="Print Label" type="object" class="btn-primary" states="draft,sale"/>
-                <button name="action_confirm" string="Confirm Sale" type="object" class="btn-primary" attrs="{'invisible': [('state', 'not in', ['draft','sent'])]}"/>
-                <button name="action_draft" states="cancel" type="object" class="btn-primary" string="Set to Draft"/>
-                <button name="action_done" type="object" class="btn-primary" string="Done" states="open,sale"/>
-                <button name="action_cancel" states="draft,open,sale" type="object" string="Cancel"/>
-                <field name="state" widget="statusbar" statusbar_visible="draft,open,done"/>
+                <field name="state" widget="statusbar" statusbar_visible="draft,process,done"/>
             </header>
             <sheet>
                 <div class="oe_button_box" name="button_box">
-                    <button name="action_view_invoice"
+                    <button name="action_view_laundry_works"
                         type="object"
                         class="oe_stat_button"
                         icon="fa-pencil-square-o"
-                        attrs="{'invisible': [('invoice_count', '=', 0)]}">
-                        <field name="invoice_count" widget="statinfo" string="Invoices"/>
+                        attrs="{'invisible': [('work_count', '=', 0)]}">
+                        <field name="work_count" widget="statinfo" string="Work Lines"/>
                     </button>
                 </div>
                 <div class="oe_title">
@@ -49,79 +43,30 @@
                     </h1>
                 </div>
                 <group>
+                    <separator string="Laundry Order Tracking "/>
                     <group>
-                        <field name="partner_id" widget="res_partner_many2one" domain="[('customer','=',True)]" context="{'search_default_customer':1, 'show_address': 1, 'show_vat': True}" options='{"always_reload": True}'/>
-                        <field name="partner_invoice_id" groups="sale.group_delivery_invoice_address" context="{'default_type':'invoice'}" options='{"always_reload": True}' invisible="True"/>
-                        <field name="partner_shipping_id" groups="sale.group_delivery_invoice_address" context="{'default_type':'delivery'}" options='{"always_reload": True}' invisible="True"/>
-                        <field name="laundry_person" string="User"/>
-                        <field name="is_laundry" invisible="True">
+                        <field name="sale_obj" />
+                        <field name="partner_id" />
+                        <field name="remarks" />
                     </group>
                     <group>
-                        <field name="lo_date"/>
-                        <field name="lo_commitment_date"/>
-                        <field name="pricelist_id" groups="product.group_sale_pricelist"  invisible="False"/>
-                        <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"  invisible="True"/>
-                        <field name="invoice_status" invisible="1"/>
+                        <field name="order_date"/>
+                        <field name="estimated_od_date"/>
+                        <field name="actual_finish"/>
                     </group>
                 </group>
                 <notebook>
-                    <page string="Order Lines" name="order_lines">
-                        <field name="order_line" mode="tree" attrs="{'readonly': [('state', 'not in', ('draft'))]}">
-                            <tree string="Laundry Order Lines" editable="bottom" decoration-info="(invoice_status == 'to invoice')">
-                                <field name="sequence" widget="handle" />
-                                <field name="work_type" />
-                                <field name="product_id"
-                                    force_save="1"
-                                    context="{
-                                        'partner_id': parent.partner_id,
-                                        'quantity': product_uom_qty,
-                                        'pricelist': parent.pricelist_id,
-                                        'uom':product_uom,
-                                        'company_id': parent.company_id,
-                                        'default_lst_price': price_unit,
-                                        'default_description_sale': name
-                                    }"
-                                />
-                                <field name="name"/>
-                                <field name="product_uom_qty" string="Qty"
-                                    context="{
-                                        'partner_id': parent.partner_id,
-                                        'quantity': product_uom_qty,
-                                        'pricelist': parent.pricelist_id,
-                                        'uom': product_uom,
-                                        'company_id': parent.company_id
-                                    }"
-                                />
-                                <field
-                                    name="product_uom"
-                                    force_save="1"
-                                    context="{'company_id': parent.company_id}"
-                                    groups="uom.group_uom"
-                                    options='{"no_open": True}'
-                                />
-                                <field name="price_unit"/>
-                                <field
-                                    name="tax_id"
-                                    widget="many2many_tags"
-                                    options="{'no_create': True}"
-                                    domain="[('type_tax_use','=','sale'),('company_id','=',parent.company_id)]"
-                                />
-                                <field name="discount" groups="sale.group_discount_per_so_line"/>
-                                <field name="price_subtotal" widget="monetary" groups="account.group_show_line_subtotals_tax_excluded"/>
-                                <field name="price_total" widget="monetary" groups="account.group_show_line_subtotals_tax_included"/>
-                                <field name="invoice_status" invisible="1"/>
+                    <page string="Work Order Lines">
+                        <field name="order_lines" mode="tree" attrs="{'readonly': [('state', 'not in', ('draft'))]}">
+                            <tree string="Laundry Order Lines" delete="False">
+                                <field name="product_id"/>
+                                <field name="uom_id" />
+                                <field name="assigned_person" />
+                                <field name="description" />
+                                <field name="state" />
+                                <field name="laundry_works" invisible="1"/>
                             </tree>
                         </field>
-                        <group class="oe_subtotal_footer oe_right" colspan="2" name="sale_total">
-                            <field name="amount_untaxed" widget='monetary' options="{'currency_field': 'currency_id'}"/>
-                            <field name="amount_tax" widget='monetary' options="{'currency_field': 'currency_id'}"/>
-                            <div class="oe_subtotal_footer_separator oe_inline o_td_label">
-                                <label for="amount_total" />
-                            </div>
-                            <field name="amount_total" nolabel="1" class="oe_subtotal_footer_separator" widget='monetary' options="{'currency_field': 'currency_id'}"/>
-                        </group>
-                        <field name="note" class="oe_inline" placeholder="Terms and conditions... (note: you can setup default ones in the Configuration menu)"/>
-                        <div class="oe_clear"/>
                     </page>
                 </notebook>
             </sheet>
